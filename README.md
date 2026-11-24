@@ -1,4 +1,4 @@
-# PNCP Consulta SDK
+# PNCP-JAVA-SDK
 
 SDK Java para a **API de Consulta do PNCP** (Portal Nacional de Contratações Públicas) — uma
 biblioteca idiomática, enxuta e sem dependências de rede externas para consultar contratações,
@@ -51,15 +51,15 @@ tudo isso com:
 
 ## Instalação
 
-> A versão `0.1.0` será publicada no Maven Central. Enquanto isso, é possível instalar
-> localmente com `mvn install`.
+> A versão `0.1.0` será publicada no Maven Central e no GitHub Packages. Enquanto isso, é possível
+> instalar localmente com `mvn install`.
 
 **Maven**
 
 ```xml
 <dependency>
     <groupId>solutions.held</groupId>
-    <artifactId>pncp-consulta</artifactId>
+    <artifactId>pncp-java-sdk</artifactId>
     <version>0.1.0</version>
 </dependency>
 ```
@@ -67,7 +67,7 @@ tudo isso com:
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("solutions.held:pncp-consulta:0.1.0")
+implementation("solutions.held:pncp-java-sdk:0.1.0")
 ```
 
 ## Começo rápido
@@ -188,9 +188,9 @@ Também é possível apontar para outro endereço base (por exemplo, um ambiente
 
 ## Documentação
 
+- **Wiki do projeto:** <https://github.com/Guiheld/PNCP-JAVA-SDK/wiki> — começando, consultas por
+  domínio, paginação, tratamento de erros, limites e FAQ.
 - **Javadoc** completo da API pública (em português).
-- Guias em [`docs/`](docs/) — começando, consultas por domínio, paginação, erros, limites e FAQ —
-  que podem ser publicados como site com [MkDocs Material](https://squidfunk.github.io/mkdocs-material/).
 - Exemplos executáveis em [`examples/`](examples/).
 
 ## Contribuição

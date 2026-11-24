@@ -30,7 +30,7 @@ public final class PncpClientConfig {
     /**
      * Valor padrão do cabeçalho {@code User-Agent} enviado em cada requisição.
      */
-    public static final String USER_AGENT_PADRAO = "pncp-consulta-java/0.1.0";
+    public static final String USER_AGENT_PADRAO = "PNCP-JAVA-SDK/0.1.0";
 
     /**
      * Vazão padrão, em requisições por segundo, do limitador client-side.
