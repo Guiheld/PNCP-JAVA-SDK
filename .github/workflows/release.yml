@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag a ser criada (ex.: v0.1.0)"
+        required: true
+        type: string
+      title:
+        description: "Título do release"
+        required: true
+        type: string
+        default: "PNCP-JAVA-SDK"
+      description:
+        description: "Descrição / notas do release"
+        required: true
+        type: string
+        default: >-
+          Versão pública: cliente Java 17 read-only para a API de Consulta do PNCP
+          (12 endpoints, paginação automática, enums tipados e resiliência com retry/throttle/429).
+          Dependência única em runtime: Jackson.
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Publicar (Maven Central + GitHub Packages)
+    runs-on: ubuntu-latest
+    if: github.actor == 'Guiheld'
+    environment: release
+    permissions:
+      contents: write # criar a tag e o release
+      packages: write # publicar no GitHub Packages
+    steps:
+      - name: Checkout (master)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Derivar a versão a partir da tag
+        id: ver
+        env:
+          TAG: ${{ inputs.tag }}
+        run: echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      # ---------------- Maven Central ----------------
+      - name: JDK 17 + importar GPG + credenciais do Central
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          java-version: "17"
+          distribution: temurin
+          cache: maven
+          server-id: central
+          server-username: CENTRAL_USERNAME
+          server-password: CENTRAL_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
+
+      - name: Ajustar a versão do projeto
+        run: mvn -B -ntp versions:set -DnewVersion=${{ steps.ver.outputs.version }} -DgenerateBackupPoms=false
+
+      - name: Publicar no Maven Central
+        env:
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: mvn -B -ntp -Prelease clean deploy
+
+      # ---------------- GitHub Packages ----------------
+      - name: Reconfigurar credenciais para o GitHub Packages
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          java-version: "17"
+          distribution: temurin
+          server-id: github
+
+      - name: Publicar no GitHub Packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn -B -ntp -Pgithub deploy
+
+      # ---------------- Tag + Release ----------------
+      - name: Criar a tag e o release no GitHub
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+          TITLE: ${{ inputs.title }}
+          BODY: ${{ inputs.description }}
+        run: gh release create "$TAG" --target master --title "$TITLE" --notes "$BODY"
