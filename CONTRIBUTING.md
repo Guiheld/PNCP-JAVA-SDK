@@ -1,6 +1,6 @@
 # Contribuindo
 
-Obrigado pelo interesse em contribuir com o PNCP Consulta SDK! Este documento resume como propor
+Obrigado pelo interesse em contribuir com o PNCP-JAVA-SDK! Este documento resume como propor
 mudanças.
 
 ## Como contribuir

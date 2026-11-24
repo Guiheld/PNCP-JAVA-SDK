@@ -5,7 +5,9 @@ Todos os as mudanças relevantes deste projeto serão documentadas neste arquivo
 O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o projeto adota
 o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [Não lançado]
+## [0.1.0] — 2026-11-24
+
+Primeira versão pública.
 
 ### Adicionado
 - Cliente de consulta (`PncpConsultaClient`) cobrindo os 12 endpoints da API de Consulta do PNCP:
@@ -21,7 +23,3 @@ o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 - Hierarquia de exceções tipadas (`PncpClientException`, `PncpServerException`,
   `PncpRateLimitException`, `PncpSerializationException`).
 - Suíte de testes com JUnit 5 e servidor HTTP local do JDK.
-
-## [0.1.0] — a definir
-
-Primeira versão pública.
