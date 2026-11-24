@@ -1,0 +1,40 @@
+# Build
+target/
+*.class
+
+# Maven
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+release.properties
+pom.xml.releaseBackup
+pom.xml.tag
+pom.xml.next
+pom.xml.bak
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+bin/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# MkDocs
+/site/
+
+# Credenciais e segredos (nunca versionar)
+*.gpg
+secring.*
+settings-security.xml
+.env

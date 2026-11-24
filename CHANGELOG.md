@@ -1,0 +1,27 @@
+# Changelog
+
+Todos os as mudanças relevantes deste projeto serão documentadas neste arquivo.
+
+O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o projeto adota
+o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
+
+## [Não lançado]
+
+### Adicionado
+- Cliente de consulta (`PncpConsultaClient`) cobrindo os 12 endpoints da API de Consulta do PNCP:
+  contratações (por publicação, por atualização, com proposta aberta e por id), contratos e
+  empenhos (por publicação e por atualização), atas de registro de preço (por vigência e por
+  atualização), planos de contratações anuais (por ano, por usuário e por atualização) e
+  instrumentos de cobrança (por data de inclusão).
+- Modelos imutáveis (records) para todos os recursos e enums tipados para modalidade de
+  contratação, modo de disputa, situação da compra e tipo de pessoa.
+- Paginação automática como `Stream`, com busca lazy de páginas.
+- Resiliência: limitação de vazão client-side, novas tentativas com recuo exponencial e
+  tratamento de respostas `429` em HTML.
+- Hierarquia de exceções tipadas (`PncpClientException`, `PncpServerException`,
+  `PncpRateLimitException`, `PncpSerializationException`).
+- Suíte de testes com JUnit 5 e servidor HTTP local do JDK.
+
+## [0.1.0] — a definir
+
+Primeira versão pública.
