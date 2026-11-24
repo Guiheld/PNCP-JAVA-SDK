@@ -38,3 +38,6 @@ Thumbs.db
 secring.*
 settings-security.xml
 .env
+/mvnw.cmd
+/mvnw
+/.mvn/
