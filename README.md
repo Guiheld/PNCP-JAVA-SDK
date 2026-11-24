@@ -7,7 +7,7 @@ cobrança publicados no PNCP.
 
 [![Java](https://img.shields.io/badge/Java-17%2B-blue)](#requisitos)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
-[![Maven Central](https://img.shields.io/badge/maven--central-em%20breve-lightgrey)](#instalação)
+[![Maven Central](https://img.shields.io/maven-central/v/solutions.held/pncp-java-sdk)](https://central.sonatype.com/artifact/solutions.held/pncp-java-sdk)
 
 > API oficial: <https://pncp.gov.br/api/consulta/swagger-ui/index.html>
 
@@ -51,8 +51,7 @@ tudo isso com:
 
 ## Instalação
 
-> A versão `0.1.0` será publicada no Maven Central e no GitHub Packages. Enquanto isso, é possível
-> instalar localmente com `mvn install`.
+> Publicado no **Maven Central** e no **GitHub Packages** — use as coordenadas abaixo.
 
 **Maven**
 
