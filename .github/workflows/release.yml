@@ -20,13 +20,23 @@ on:
           Versão pública: cliente Java 17 read-only para a API de Consulta do PNCP
           (12 endpoints, paginação automática, enums tipados e resiliência com retry/throttle/429).
           Dependência única em runtime: Jackson.
+      maven_central:
+        description: "Publicar no Maven Central"
+        required: false
+        type: boolean
+        default: true
+      github_packages:
+        description: "Publicar no GitHub Packages"
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   contents: read
 
 jobs:
   deploy:
-    name: Publicar (Maven Central + GitHub Packages)
+    name: Publicar release
     runs-on: ubuntu-latest
     if: github.actor == 'Guiheld'
     environment: release
@@ -46,8 +56,19 @@ jobs:
           TAG: ${{ inputs.tag }}
         run: echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
 
-      # ---------------- Maven Central ----------------
-      - name: JDK 17 + importar GPG + credenciais do Central
+      - name: JDK 17 (base, para versions:set)
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          java-version: "17"
+          distribution: temurin
+          cache: maven
+
+      - name: Ajustar a versão do projeto
+        run: mvn -B -ntp versions:set -DnewVersion=${{ steps.ver.outputs.version }} -DgenerateBackupPoms=false
+
+      # ---------------- Maven Central (opcional) ----------------
+      - name: Importar GPG + credenciais do Central
+        if: ${{ inputs.maven_central }}
         uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           java-version: "17"
@@ -59,18 +80,17 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase-env-var: GPG_PASSPHRASE
 
-      - name: Ajustar a versão do projeto
-        run: mvn -B -ntp versions:set -DnewVersion=${{ steps.ver.outputs.version }} -DgenerateBackupPoms=false
-
       - name: Publicar no Maven Central
+        if: ${{ inputs.maven_central }}
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: mvn -B -ntp -Prelease clean deploy
 
-      # ---------------- GitHub Packages ----------------
+      # ---------------- GitHub Packages (opcional) ----------------
       - name: Reconfigurar credenciais para o GitHub Packages
+        if: ${{ inputs.github_packages }}
         uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           java-version: "17"
@@ -78,6 +98,7 @@ jobs:
           server-id: github
 
       - name: Publicar no GitHub Packages
+        if: ${{ inputs.github_packages }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: mvn -B -ntp -Pgithub deploy
