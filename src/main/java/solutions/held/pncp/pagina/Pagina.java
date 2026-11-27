@@ -12,7 +12,7 @@ import java.util.List;
  * </p>
  *
  * @param <T> tipo dos itens contidos na página
- * @param itens itens desta página (campo {@code data} na API)
+ * @param itens itens desta página (campo {@code data} na API); a lista é imutável e nunca {@code null} (vazia quando a API não devolveu itens)
  * @param totalRegistros total de registros que satisfazem a consulta
  * @param totalPaginas total de páginas disponíveis
  * @param numeroPagina número desta página, iniciando em 1
@@ -28,6 +28,15 @@ public record Pagina<T>(
         Long numeroPagina,
         Long paginasRestantes,
         @JsonProperty("empty") Boolean vazia) {
+
+    /**
+     * Normaliza os itens para uma lista imutável, tratando {@code null} como lista vazia.
+     *
+     * @since 27/11/2026
+     */
+    public Pagina {
+        itens = itens == null ? List.of() : List.copyOf(itens);
+    }
 
     /**
      * Informa se há páginas subsequentes a esta.

@@ -28,8 +28,8 @@ import java.util.List;
  * @param dataTipoEventoMaisRecente data do evento mais recente, como texto
  * @param dataInclusao data e hora de inclusão no PNCP
  * @param dataAtualizacao data e hora da última atualização no PNCP
- * @param itens itens da nota fiscal
- * @param eventos eventos registrados na nota fiscal
+ * @param itens itens da nota fiscal; a lista é imutável e nunca {@code null}
+ * @param eventos eventos registrados na nota fiscal; a lista é imutável e nunca {@code null}
  * @author Guilherme A. Held
  * @since 23/11/2026
  */
@@ -53,4 +53,15 @@ public record NotaFiscalEletronica(
         LocalDateTime dataInclusao,
         LocalDateTime dataAtualizacao,
         List<ItemNotaFiscal> itens,
-        List<EventoNotaFiscal> eventos) {}
+        List<EventoNotaFiscal> eventos) {
+
+    /**
+     * Normaliza os itens e os eventos para listas imutáveis, tratando {@code null} como lista vazia.
+     *
+     * @since 27/11/2026
+     */
+    public NotaFiscalEletronica {
+        itens = itens == null ? List.of() : List.copyOf(itens);
+        eventos = eventos == null ? List.of() : List.copyOf(eventos);
+    }
+}

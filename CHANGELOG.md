@@ -13,6 +13,9 @@ o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
   a SDK constrói o cliente padrão a partir da configuração, como antes.
 
 ### Alterado
+- As listas expostas pelos modelos (`Pagina#itens`, `Contratacao`/`ContratacaoResumo#fontesOrcamentarias`,
+  `NotaFiscalEletronica#itens`/`#eventos` e `PlanoContratacao#itens`) agora são imutáveis e nunca nulas —
+  campos ausentes na resposta viram listas vazias.
 - Dependências atualizadas: Jackson `2.23.0`, JUnit `5.14.4`, Spotless `3.12.0`,
   palantir-java-format `2.103.0` e maven-compiler-plugin `3.16.0`.
 - A verificação de integração contínua passa a executar `mvn verify` (compila, roda os testes e

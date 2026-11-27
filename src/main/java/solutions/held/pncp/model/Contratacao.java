@@ -41,7 +41,7 @@ import java.util.List;
  * @param objetoCompra objeto da compra
  * @param informacaoComplementar informação complementar
  * @param srp indica se é sistema de registro de preços
- * @param fontesOrcamentarias fontes orçamentárias da contratação
+ * @param fontesOrcamentarias fontes orçamentárias da contratação; a lista é imutável e nunca {@code null}
  * @param emendaParlamentar indica se há emenda parlamentar
  * @param dataPublicacaoPncp data e hora de publicação no PNCP
  * @param dataAberturaProposta data e hora de abertura das propostas
@@ -94,4 +94,14 @@ public record Contratacao(
         LocalDateTime dataInclusao,
         LocalDateTime dataAtualizacao,
         LocalDateTime dataAtualizacaoGlobal,
-        String usuarioNome) {}
+        String usuarioNome) {
+
+    /**
+     * Normaliza as fontes orçamentárias para uma lista imutável, tratando {@code null} como lista vazia.
+     *
+     * @since 27/11/2026
+     */
+    public Contratacao {
+        fontesOrcamentarias = fontesOrcamentarias == null ? List.of() : List.copyOf(fontesOrcamentarias);
+    }
+}

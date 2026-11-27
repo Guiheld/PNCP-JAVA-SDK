@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Plano de contratações anual (PCA) de uma unidade, com seus itens.
  *
- * @param itens itens que compõem o plano de contratações
+ * @param itens itens que compõem o plano de contratações; a lista é imutável e nunca {@code null}
  * @param anoPca ano do plano de contratações
  * @param codigoUnidade código da unidade responsável pelo plano
  * @param nomeUnidade nome da unidade responsável pelo plano
@@ -27,4 +27,14 @@ public record PlanoContratacao(
         String orgaoEntidadeCnpj,
         String idPcaPncp,
         LocalDateTime dataPublicacaoPNCP,
-        LocalDateTime dataAtualizacaoGlobalPCA) {}
+        LocalDateTime dataAtualizacaoGlobalPCA) {
+
+    /**
+     * Normaliza os itens para uma lista imutável, tratando {@code null} como lista vazia.
+     *
+     * @since 27/11/2026
+     */
+    public PlanoContratacao {
+        itens = itens == null ? List.of() : List.copyOf(itens);
+    }
+}

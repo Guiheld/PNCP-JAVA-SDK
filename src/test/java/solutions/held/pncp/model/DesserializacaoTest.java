@@ -1,7 +1,10 @@
 package solutions.held.pncp.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -125,5 +128,48 @@ class DesserializacaoTest {
         RespostaErroValidacao erro = mapper.readValue(json, RespostaErroValidacao.class);
         assertEquals("erro", erro.message());
         assertEquals("400", erro.status());
+    }
+
+    /**
+     * Listas ausentes na resposta viram listas vazias imutáveis, nunca {@code null}.
+     *
+     * @throws Exception se a desserialização falhar
+     */
+    @Test
+    void contratacaoResumo_semFontes_listaVaziaImutavel() throws Exception {
+        ContratacaoResumo resumo = mapper.readValue("{ \"numeroControlePNCP\": \"X\" }", ContratacaoResumo.class);
+        assertNotNull(resumo.fontesOrcamentarias());
+        assertTrue(resumo.fontesOrcamentarias().isEmpty());
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> resumo.fontesOrcamentarias().add(null));
+    }
+
+    /**
+     * Listas presentes na resposta são expostas como cópias imutáveis.
+     *
+     * @throws Exception se a desserialização falhar
+     */
+    @Test
+    void contratacaoResumo_comFontes_listaImutavel() throws Exception {
+        ContratacaoResumo resumo = mapper.readValue("{ \"fontesOrcamentarias\": [ {}, {} ] }", ContratacaoResumo.class);
+        assertEquals(2, resumo.fontesOrcamentarias().size());
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> resumo.fontesOrcamentarias().clear());
+    }
+
+    /**
+     * Um record com duas listas tem ambas normalizadas para listas vazias imutáveis quando ausentes.
+     *
+     * @throws Exception se a desserialização falhar
+     */
+    @Test
+    void notaFiscal_semItensEEventos_listasVaziasImutaveis() throws Exception {
+        NotaFiscalEletronica nf = mapper.readValue("{ \"numero\": 1 }", NotaFiscalEletronica.class);
+        assertTrue(nf.itens().isEmpty());
+        assertTrue(nf.eventos().isEmpty());
+        assertThrows(UnsupportedOperationException.class, () -> nf.itens().add(null));
+        assertThrows(UnsupportedOperationException.class, () -> nf.eventos().add(null));
     }
 }
