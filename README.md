@@ -174,7 +174,9 @@ PncpConsultaClient cliente = PncpConsultaClient.comConfig(config);
 ```
 
 Também é possível apontar para outro endereço base (por exemplo, um ambiente local) com
-`urlBase(...)` e substituir o `ObjectMapper` do Jackson com `objectMapper(...)`.
+`urlBase(...)`, substituir o `ObjectMapper` do Jackson com `objectMapper(...)` e fornecer um
+`HttpClient` próprio com `httpClient(...)` — útil para proxy, SSL/TLS, autenticação ou um executor
+dedicado. Quando nenhum cliente é informado, a SDK constrói um a partir da configuração.
 
 ## Comportamentos conhecidos da API
 
