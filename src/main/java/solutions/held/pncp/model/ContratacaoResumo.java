@@ -46,7 +46,7 @@ import java.util.List;
  * @param modoDisputaNome nome do modo de disputa
  * @param tipoInstrumentoConvocatorioCodigo código do tipo de instrumento convocatório
  * @param tipoInstrumentoConvocatorioNome nome do tipo de instrumento convocatório
- * @param fontesOrcamentarias fontes orçamentárias da contratação
+ * @param fontesOrcamentarias fontes orçamentárias da contratação; a lista é imutável e nunca {@code null}
  * @param situacaoCompraId código da situação da contratação
  * @param situacaoCompraNome nome da situação da contratação
  * @param usuarioNome nome do usuário responsável pelo registro
@@ -88,4 +88,14 @@ public record ContratacaoResumo(
         List<FonteOrcamentaria> fontesOrcamentarias,
         Long situacaoCompraId,
         String situacaoCompraNome,
-        String usuarioNome) {}
+        String usuarioNome) {
+
+    /**
+     * Normaliza as fontes orçamentárias para uma lista imutável, tratando {@code null} como lista vazia.
+     *
+     * @since 27/11/2026
+     */
+    public ContratacaoResumo {
+        fontesOrcamentarias = fontesOrcamentarias == null ? List.of() : List.copyOf(fontesOrcamentarias);
+    }
+}
