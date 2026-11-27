@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.net.http.HttpClient;
 import java.time.Duration;
+import java.util.Optional;
 
 /**
  * Configuração imutável do cliente de consulta do PNCP: endereço base, tempos limite, política de novas tentativas,
@@ -47,6 +49,7 @@ public final class PncpClientConfig {
     private final Double vazaoPorSegundo;
     private final String userAgent;
     private final ObjectMapper objectMapper;
+    private final HttpClient httpClient;
 
     private PncpClientConfig(Builder builder) {
         this.urlBase = builder.urlBase;
@@ -59,6 +62,7 @@ public final class PncpClientConfig {
         this.vazaoPorSegundo = builder.vazaoPorSegundo;
         this.userAgent = builder.userAgent;
         this.objectMapper = builder.objectMapper;
+        this.httpClient = builder.httpClient;
     }
 
     /**
@@ -138,6 +142,22 @@ public final class PncpClientConfig {
     }
 
     /**
+     * O {@link HttpClient} próprio informado na configuração, quando houver.
+     *
+     * <p>
+     *     Quando vazio, o transporte da SDK constrói um cliente padrão a partir da configuração (tempo limite de
+     *     conexão e seguimento de redirecionamentos). Quando presente, o cliente informado é usado como está — suas
+     *     próprias configurações de conexão prevalecem.
+     * </p>
+     *
+     * @return o {@link HttpClient} configurado, ou vazio para usar o cliente padrão da SDK
+     * @since 27/11/2026
+     */
+    public Optional<HttpClient> httpClient() {
+        return Optional.ofNullable(this.httpClient);
+    }
+
+    /**
      * Construtor fluente de {@link PncpClientConfig}, com valores padrão já aplicados; cada função substitui um único parâmetro.
      *
      * @since 23/11/2026
@@ -154,6 +174,7 @@ public final class PncpClientConfig {
         private Double vazaoPorSegundo = VAZAO_PADRAO_POR_SEGUNDO;
         private String userAgent = USER_AGENT_PADRAO;
         private ObjectMapper objectMapper;
+        private HttpClient httpClient;
 
         /**
          * Define o endereço base da API, útil para apontar a um ambiente local ou
@@ -275,6 +296,27 @@ public final class PncpClientConfig {
          */
         public Builder objectMapper(ObjectMapper objectMapper) {
             this.objectMapper = objectMapper;
+            return this;
+        }
+
+        /**
+         * Fornece um {@link HttpClient} próprio, usado como está no lugar do cliente padrão da SDK.
+         *
+         * <p>
+         *     Útil para configurar proxy, SSL/TLS, autenticação, versão de protocolo ou um executor dedicado. Como o
+         *     cliente informado é usado como está, o {@link #timeoutConexao(Duration)} desta configuração não se aplica
+         *     a ele — defina o tempo limite de conexão no próprio {@link HttpClient}. O tempo limite de resposta
+         *     continua sendo aplicado por requisição. A SDK usa o cliente como está e nunca o fecha: o ciclo de
+         *     vida é responsabilidade de quem o forneceu (inclusive {@code close()} no Java 21+, onde {@link HttpClient}
+         *     passou a ser {@link AutoCloseable}). Quando nulo, a SDK constrói o cliente padrão.
+         * </p>
+         *
+         * @param httpClient cliente HTTP a utilizar; quando nulo, usa-se o cliente padrão da SDK
+         * @return este construtor, para encadeamento fluente
+         * @since 27/11/2026
+         */
+        public Builder httpClient(HttpClient httpClient) {
+            this.httpClient = httpClient;
             return this;
         }
 

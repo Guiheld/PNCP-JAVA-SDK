@@ -7,6 +7,11 @@ o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [0.2.0] — Não lançado
 
+### Adicionado
+- `PncpClientConfig.Builder#httpClient(HttpClient)` para fornecer um `java.net.http.HttpClient`
+  próprio (proxy, SSL/TLS, autenticação, versão de protocolo ou executor dedicado). Quando ausente,
+  a SDK constrói o cliente padrão a partir da configuração, como antes.
+
 ### Alterado
 - Dependências atualizadas: Jackson `2.23.0`, JUnit `5.14.4`, Spotless `3.12.0`,
   palantir-java-format `2.103.0` e maven-compiler-plugin `3.16.0`.

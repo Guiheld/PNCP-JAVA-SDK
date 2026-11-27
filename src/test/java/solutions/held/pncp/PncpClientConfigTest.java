@@ -2,8 +2,11 @@ package solutions.held.pncp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.net.http.HttpClient;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -54,5 +57,18 @@ class PncpClientConfigTest {
         assertThrows(
                 IllegalArgumentException.class,
                 () -> PncpClientConfig.builder().multiplicadorBackoff(0.5).build());
+    }
+
+    /**
+     * O {@link HttpClient} é opcional: ausente por padrão e preservado quando informado.
+     */
+    @Test
+    void httpClient_opcional_ausentePorPadraoEPreservadoQuandoInformado() {
+        assertTrue(PncpClientConfig.padrao().httpClient().isEmpty());
+
+        HttpClient cliente = HttpClient.newHttpClient();
+        PncpClientConfig config = PncpClientConfig.builder().httpClient(cliente).build();
+        assertTrue(config.httpClient().isPresent());
+        assertSame(cliente, config.httpClient().get());
     }
 }

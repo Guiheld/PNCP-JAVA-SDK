@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -215,6 +216,73 @@ class ConsultaHttpTest {
                 .map(ContratacaoResumo::numeroControlePNCP)
                 .collect(Collectors.toList());
         assertEquals(List.of("A", "B"), numeros);
+        assertEquals(2, chamadas.get());
+    }
+
+    /**
+     * Um {@link HttpClient} próprio informado na configuração deve ser de fato usado pelo transporte: um cliente que
+     * não segue redirecionamentos faz o 302 aflorar como erro de cliente, enquanto o cliente padrão da SDK (que segue
+     * redirecionamentos) o seguiria.
+     */
+    /**
+     * Instala um manipulador que responde 302 (com {@code Location} para {@code /destino}) em qualquer caminho, exceto
+     * {@code /destino}, que responde 200 com uma página vazia. Devolve o contador de acessos ao servidor.
+     *
+     * @return o contador de acessos ao servidor
+     */
+    private AtomicInteger instalarRedirecionamento() {
+        AtomicInteger chamadas = new AtomicInteger();
+        this.manipulador = troca -> {
+            chamadas.incrementAndGet();
+            if (troca.getRequestURI().getPath().endsWith("/destino")) {
+                responder(troca, 200, "{\"data\":[],\"empty\":true}", "application/json");
+            } else {
+                troca.getResponseHeaders().add("Location", "http://localhost:" + this.porta + "/destino");
+                troca.sendResponseHeaders(302, -1);
+                troca.close();
+            }
+        };
+        return chamadas;
+    }
+
+    /**
+     * Um {@link HttpClient} próprio informado na configuração deve ser de fato usado pelo transporte: um cliente que
+     * não segue redirecionamentos faz o 302 aflorar como erro de cliente e acessa o servidor uma única vez —
+     * comportamento que o cliente padrão da SDK (que segue redirecionamentos) não produziria.
+     */
+    @Test
+    void httpClientPersonalizado_eUsadoPeloTransporte() {
+        AtomicInteger chamadas = instalarRedirecionamento();
+        HttpClient semRedirecionamento = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NEVER)
+                .build();
+        PncpClientConfig config = PncpClientConfig.builder()
+                .urlBase("http://localhost:" + this.porta)
+                .vazaoPorSegundo((double) 0)
+                .maxTentativas(1)
+                .httpClient(semRedirecionamento)
+                .build();
+        PncpConsultaClient cliente = PncpConsultaClient.comConfig(config);
+
+        PncpClientException excecao = assertThrows(
+                PncpClientException.class,
+                () -> cliente.contratacoes().consultarPorPublicacao(requisicaoContratacao(), 1));
+        assertEquals(302, excecao.codigoStatus());
+        assertEquals(1, chamadas.get());
+    }
+
+    /**
+     * Sem {@link HttpClient} informado, o cliente padrão da SDK segue o redirecionamento 302 até o destino 200 — o
+     * oposto do teste com cliente próprio, provando que a escolha do cliente altera o resultado observável.
+     */
+    @Test
+    void semHttpClientInformado_clientePadraoSegueRedirecionamento() {
+        AtomicInteger chamadas = instalarRedirecionamento();
+
+        Pagina<ContratacaoResumo> pagina =
+                clienteComTentativas(1).contratacoes().consultarPorPublicacao(requisicaoContratacao(), 1);
+
+        assertTrue(pagina.itensSeguros().isEmpty());
         assertEquals(2, chamadas.get());
     }
 }

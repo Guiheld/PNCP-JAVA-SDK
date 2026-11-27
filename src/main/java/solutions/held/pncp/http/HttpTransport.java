@@ -27,7 +27,8 @@ import solutions.held.pncp.pagina.Pagina;
  * exceções tipadas e desserializa as respostas.
  *
  * <p>
- *     Usa exclusivamente o {@link HttpClient} do JDK, sem dependências externas de rede.
+ *     Usa o {@link HttpClient} do JDK: por padrão, um cliente próprio construído a partir da configuração; ou, quando
+ *     informado em {@link PncpClientConfig#httpClient()}, o cliente fornecido. Não há dependências externas de rede.
  *     É de uso interno da SDK e seguro para uso concorrente.
  * </p>
  *
@@ -47,10 +48,11 @@ public final class HttpTransport {
         this.config = config;
         this.objectMapper = config.objectMapper();
         this.throttler = new Throttler(config.vazaoPorSegundo());
-        this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(config.timeoutConexao())
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
+        this.httpClient = config.httpClient()
+                .orElseGet(() -> HttpClient.newBuilder()
+                        .connectTimeout(config.timeoutConexao())
+                        .followRedirects(HttpClient.Redirect.NORMAL)
+                        .build());
     }
 
     /**
