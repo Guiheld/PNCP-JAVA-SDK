@@ -8,6 +8,7 @@ cobrança publicados no PNCP.
 [![Java](https://img.shields.io/badge/Java-17%2B-blue)](#requisitos)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 [![Maven Central](https://img.shields.io/maven-central/v/solutions.held/pncp-java-sdk)](https://central.sonatype.com/artifact/solutions.held/pncp-java-sdk)
+[![CI](https://github.com/Guiheld/PNCP-JAVA-SDK/actions/workflows/ci.yml/badge.svg?event=pull_request)](https://github.com/Guiheld/PNCP-JAVA-SDK/actions/workflows/ci.yml?query=event%3Apull_request)
 
 > API oficial: <https://pncp.gov.br/api/consulta/swagger-ui/index.html>
 

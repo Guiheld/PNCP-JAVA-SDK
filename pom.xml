@@ -6,7 +6,7 @@
 
     <groupId>solutions.held</groupId>
     <artifactId>pncp-java-sdk</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>PNCP-JAVA-SDK</name>
@@ -41,17 +41,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <jackson.version>2.18.2</jackson.version>
-        <junit.version>5.11.4</junit.version>
+        <jackson.version>2.23.0</jackson.version>
+        <junit.version>5.14.4</junit.version>
 
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
         <maven-jar-plugin.version>3.4.1</maven-jar-plugin.version>
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
-        <spotless-maven-plugin.version>2.44.5</spotless-maven-plugin.version>
-        <palantir-java-format.version>2.68.0</palantir-java-format.version>
+        <spotless-maven-plugin.version>3.12.0</spotless-maven-plugin.version>
+        <palantir-java-format.version>2.103.0</palantir-java-format.version>
         <central-publishing-maven-plugin.version>0.12.0</central-publishing-maven-plugin.version>
     </properties>
 

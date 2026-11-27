@@ -5,6 +5,14 @@ Todos os as mudanças relevantes deste projeto serão documentadas neste arquivo
 O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o projeto adota
 o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.2.0] — Não lançado
+
+### Alterado
+- Dependências atualizadas: Jackson `2.23.0`, JUnit `5.14.4`, Spotless `3.12.0`,
+  palantir-java-format `2.103.0` e maven-compiler-plugin `3.16.0`.
+- A verificação de integração contínua passa a executar `mvn verify` (compila, roda os testes e
+  valida a formatação com o Spotless) na matriz JDK 17/21/25.
+
 ## [0.1.0] — 2026-11-24
 
 Primeira versão pública.

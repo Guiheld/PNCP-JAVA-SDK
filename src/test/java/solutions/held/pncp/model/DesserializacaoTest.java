@@ -32,8 +32,7 @@ class DesserializacaoTest {
      */
     @Test
     void contratacaoResumo_mapeiaDatasEValores() throws Exception {
-        String json =
-                """
+        String json = """
                 {
                   "numeroControlePNCP": "00394460000141-1-000001/2024",
                   "anoCompra": 2024,
@@ -58,8 +57,7 @@ class DesserializacaoTest {
      */
     @Test
     void contrato_tipoPessoaConhecido_mapeiaEnum() throws Exception {
-        String json =
-                """
+        String json = """
                 { "tipoPessoa": "PJ", "valorGlobal": 1000.00, "dataVigenciaInicio": "2024-03-01" }
                 """;
         Contrato contrato = mapper.readValue(json, Contrato.class);
@@ -97,8 +95,7 @@ class DesserializacaoTest {
      */
     @Test
     void pagina_envelopeGenerico_mapeiaMetadados() throws Exception {
-        String json =
-                """
+        String json = """
                 {
                   "data": [ { "numeroControlePNCP": "A" }, { "numeroControlePNCP": "B" } ],
                   "totalRegistros": 2,
@@ -122,8 +119,7 @@ class DesserializacaoTest {
      */
     @Test
     void respostaErro_mapeiaCampos() throws Exception {
-        String json =
-                """
+        String json = """
                 { "message": "erro", "path": "/v1/x", "timestamp": "2024-01-01", "status": "400", "error": "Bad Request" }
                 """;
         RespostaErroValidacao erro = mapper.readValue(json, RespostaErroValidacao.class);
