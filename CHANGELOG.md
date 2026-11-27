@@ -8,11 +8,17 @@ o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 ## [0.2.0] — Não lançado
 
 ### Adicionado
+- Novo módulo `pncp-java-sdk-spring-boot-starter`: auto-configuração Spring Boot 3.x que expõe um
+  `PncpConsultaClient` pronto para injeção, configurável por `pncp.*` no `application.yml`.
 - `PncpClientConfig.Builder#httpClient(HttpClient)` para fornecer um `java.net.http.HttpClient`
   próprio (proxy, SSL/TLS, autenticação, versão de protocolo ou executor dedicado). Quando ausente,
   a SDK constrói o cliente padrão a partir da configuração, como antes.
 
 ### Alterado
+- O projeto passou a ser um reator Maven multi-módulo: o novo `pncp-dados-parent` agrega o core
+  `pncp-java-sdk` (coordenadas **inalteradas**) e o `pncp-java-sdk-spring-boot-starter`.
+- O cabeçalho `User-Agent` passou a reportar a versão real da SDK (derivada do `project.version`) em
+  vez de um valor fixo.
 - As listas expostas pelos modelos (`Pagina#itens`, `Contratacao`/`ContratacaoResumo#fontesOrcamentarias`,
   `NotaFiscalEletronica#itens`/`#eventos` e `PlanoContratacao#itens`) agora são imutáveis e nunca nulas —
   campos ausentes na resposta viram listas vazias.

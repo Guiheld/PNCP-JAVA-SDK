@@ -19,6 +19,7 @@ cobrança publicados no PNCP.
 - [Por que esta SDK](#por-que-esta-sdk)
 - [Requisitos](#requisitos)
 - [Instalação](#instalação)
+- [Módulos](#módulos)
 - [Começo rápido](#começo-rápido)
 - [Consultas disponíveis](#consultas-disponíveis)
 - [Paginação automática](#paginação-automática)
@@ -60,15 +61,41 @@ tudo isso com:
 <dependency>
     <groupId>solutions.held</groupId>
     <artifactId>pncp-java-sdk</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
 **Gradle (Kotlin DSL)**
 
 ```kotlin
-implementation("solutions.held:pncp-java-sdk:0.1.0")
+implementation("solutions.held:pncp-java-sdk:0.2.0")
 ```
+
+### Com Spring Boot
+
+Em projetos Spring Boot, use o _starter_ — ele traz o core transitivamente e **auto-configura** um
+`PncpConsultaClient` pronto para injeção, configurável por `pncp.*`:
+
+```xml
+<dependency>
+    <groupId>solutions.held</groupId>
+    <artifactId>pncp-java-sdk-spring-boot-starter</artifactId>
+    <version>0.2.0</version>
+</dependency>
+```
+
+Detalhes de configuração e uso no
+[README do starter](pncp-java-sdk-spring-boot-starter/README.md).
+
+## Módulos
+
+| Artefato | Papel |
+|---|---|
+| `solutions.held:pncp-java-sdk` | Core da SDK, sem dependência de framework. |
+| `solutions.held:pncp-java-sdk-spring-boot-starter` | Auto-configuração Spring Boot; traz o core transitivamente. |
+
+> Há também o `solutions.held:pncp-dados-parent`, publicado apenas como POM agregador de build — **não é
+> uma dependência** (não o declare).
 
 ## Começo rápido
 
