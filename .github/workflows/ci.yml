@@ -27,5 +27,5 @@ jobs:
           distribution: temurin
           cache: maven
 
-      - name: Executar testes
-        run: mvn -B -ntp test
+      - name: Build, testes e formatação (verify)
+        run: mvn -B -ntp verify
