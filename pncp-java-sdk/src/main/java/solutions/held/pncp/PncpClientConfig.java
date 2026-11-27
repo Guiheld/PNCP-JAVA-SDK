@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.http.HttpClient;
 import java.time.Duration;
 import java.util.Optional;
+import java.util.Properties;
 
 /**
  * Configuração imutável do cliente de consulta do PNCP: endereço base, tempos limite, política de novas tentativas,
@@ -32,7 +35,7 @@ public final class PncpClientConfig {
     /**
      * Valor padrão do cabeçalho {@code User-Agent} enviado em cada requisição.
      */
-    public static final String USER_AGENT_PADRAO = "PNCP-JAVA-SDK/0.1.0";
+    public static final String USER_AGENT_PADRAO = "PNCP-JAVA-SDK/" + resolverVersao();
 
     /**
      * Vazão padrão, em requisições por segundo, do limitador client-side.
@@ -99,6 +102,28 @@ public final class PncpClientConfig {
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL)
                 .build();
+    }
+
+    /**
+     * Lê a versão da SDK a partir do recurso de build filtrado pelo Maven.
+     *
+     * @return a versão declarada no {@code project.version} do POM, ou {@code dev} quando indisponível
+     * @since 27/11/2026
+     */
+    private static String resolverVersao() {
+        try (InputStream entrada = PncpClientConfig.class.getResourceAsStream("/pncp-java-sdk.properties")) {
+            if (entrada != null) {
+                Properties propriedades = new Properties();
+                propriedades.load(entrada);
+                String versao = propriedades.getProperty("version");
+                if (versao != null && !versao.isBlank() && !versao.contains("${")) {
+                    return versao.strip();
+                }
+            }
+        } catch (IOException e) {
+            // Recurso ausente ou ilegível: usa o rótulo de desenvolvimento abaixo.
+        }
+        return "dev";
     }
 
     public String urlBase() {

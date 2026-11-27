@@ -16,12 +16,12 @@ A forma mais simples é montar o classpath com o Maven e usar o executor de arqu
 No diretório raiz do projeto:
 
 ```bash
-# 1. Instale a SDK no repositório local (gera o jar e resolve as dependências)
+# 1. Instale a SDK no repositório local (gera os jars e resolve as dependências)
 mvn -q install
 
-# 2. Monte o classpath com a SDK + Jackson
-mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt
-CP="target/classes:$(cat cp.txt)"   # no Windows (PowerShell): $CP = "target/classes;$(Get-Content cp.txt)"
+# 2. Monte o classpath do core (SDK + Jackson)
+mvn -q -pl pncp-java-sdk dependency:build-classpath -Dmdep.outputFile=cp.txt
+CP="pncp-java-sdk/target/classes:$(cat pncp-java-sdk/cp.txt)"   # Windows (PowerShell): $CP = "pncp-java-sdk/target/classes;$(Get-Content pncp-java-sdk/cp.txt)"
 
 # 3. Execute o exemplo
 java -cp "$CP" examples/ExemploContratacoes.java

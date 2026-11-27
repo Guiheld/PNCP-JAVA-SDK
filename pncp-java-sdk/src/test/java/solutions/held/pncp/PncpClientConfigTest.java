@@ -1,6 +1,7 @@
 package solutions.held.pncp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,6 +28,17 @@ class PncpClientConfigTest {
         assertEquals(3, config.maxTentativas());
         assertEquals(PncpClientConfig.VAZAO_PADRAO_POR_SEGUNDO, config.vazaoPorSegundo());
         assertNotNull(config.objectMapper());
+    }
+
+    /**
+     * O cabeçalho {@code User-Agent} padrão traz a versão real da SDK (filtrada do POM), não o rótulo
+     * de desenvolvimento.
+     */
+    @Test
+    void padrao_userAgentTrazVersaoReal() {
+        String userAgent = PncpClientConfig.padrao().userAgent();
+        assertTrue(userAgent.startsWith("PNCP-JAVA-SDK/"));
+        assertNotEquals("PNCP-JAVA-SDK/dev", userAgent);
     }
 
     /**
